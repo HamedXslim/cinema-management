@@ -1,22 +1,33 @@
 <?php
-include "db_conn.php";
+include "../login/login-check.php";
+?>
+<?php
+
 
 if (isset($_POST["submit"])) {
-   $first_name = $_POST['first_name'];
-   $last_name = $_POST['last_name'];
-   $email = $_POST['email'];
-   $gender = $_POST['gender'];
+   $id_projection = $_POST['id_projection'];
+   $id_film = $_POST['id_film'];
+   $id_salle = $_POST['id_salle'];
+  /* $horaire = $_POST['horaire'];
+   $horaire = date('Y-m-d h:i:sa', strtotime($_POST['horaire']));
+   $durée = date('H:i:s', strtotime($_POST['durée']));
+   $durée = $_POST['durée'];*/
+   
+   $horaire = $_POST['horaire'];
+   $horaire = date('Y-m-d H:i:s', strtotime($horaire));
+   $duree = $_POST['duree'];
 
-   $sql = "INSERT INTO `crud`(`id`, `first_name`, `last_name`, `email`, `gender`) VALUES (NULL,'$first_name','$last_name','$email','$gender')";
+   $sql = "INSERT INTO `projection`(`id_projection`, `id_film`, `id_salle`, `horaire`, `duree`) VALUES ('$id_projection','$id_film','$id_salle','$horaire','$duree')";
 
    $result = mysqli_query($conn, $sql);
 
    if ($result) {
-      header("Location: index.php?msg=New record created successfully");
+      header("Location: index-projection.php?msg=New record created successfully");
    } else {
       echo "Failed: " . mysqli_error($conn);
    }
 }
+
 
 ?>
 
@@ -37,52 +48,53 @@ if (isset($_POST["submit"])) {
    <!-- Font Awesome -->
    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-   <title>PHP CRUD Application</title>
+   <title>PHP projection Application</title>
 </head>
 
 <body>
    <nav class="navbar navbar-light justify-content-center fs-3 mb-5" style="background-color: #00ff5573;">
-      PHP Complete CRUD Application
+      PHP Complete projection Application
    </nav>
 
    <div class="container">
       <div class="text-center mb-4">
-         <h3>Add New User</h3>
+         <h3>Add New projection</h3>
          <p class="text-muted">Complete the form below to add a new user</p>
       </div>
 
       <div class="container d-flex justify-content-center">
          <form action="" method="post" style="width:50vw; min-width:300px;">
-            <div class="row mb-3">
+         <div class="row mb-3">
                <div class="col">
-                  <label class="form-label">First Name:</label>
-                  <input type="text" class="form-control" name="first_name" placeholder="Albert">
+                  <label class="form-label">ID Projection</label>
+                  <input type="text" class="form-control" name="id_projection" placeholder="0000">
+               </div>
+               
+               <div class="row mb-3">
+               <div class="col">
+                  <label class="form-label">ID Film</label>
+                  <input type="text" class="form-control" name="id_film" placeholder="0000">
                </div>
 
                <div class="col">
-                  <label class="form-label">Last Name:</label>
-                  <input type="text" class="form-control" name="last_name" placeholder="Einstein">
+                  <label class="form-label">ID Salle</label>
+                  <input type="text" class="form-control" name="id_salle" placeholder="00">
                </div>
             </div>
 
             <div class="mb-3">
-               <label class="form-label">Email:</label>
-               <input type="email" class="form-control" name="email" placeholder="name@example.com">
+               <label class="form-label">Horaire:</label>
+               <input type="text" class="form-control" name="horaire" >
             </div>
 
             <div class="form-group mb-3">
-               <label>Gender:</label>
-               &nbsp;
-               <input type="radio" class="form-check-input" name="gender" id="male" value="male">
-               <label for="male" class="form-input-label">Male</label>
-               &nbsp;
-               <input type="radio" class="form-check-input" name="gender" id="female" value="female">
-               <label for="female" class="form-input-label">Female</label>
+            <label class="form-label">Durée:</label>
+               <input type="text" class="form-control" name="duree" >
             </div>
 
             <div>
                <button type="submit" class="btn btn-success" name="submit">Save</button>
-               <a href="index.php" class="btn btn-danger">Cancel</a>
+               <a href="projections-table.php" class="btn btn-danger">Cancel</a>
             </div>
          </form>
       </div>
@@ -94,3 +106,4 @@ if (isset($_POST["submit"])) {
 </body>
 
 </html>
+

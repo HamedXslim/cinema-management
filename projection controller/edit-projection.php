@@ -1,24 +1,41 @@
 <?php
-include "db_conn.php";
-$id = $_GET["id"];
+include "../login/login-check.php";
+?>
+<?php
+
+$id_projection = $_GET["id_projection"];
 
 if (isset($_POST["submit"])) {
-  $first_name = $_POST['first_name'];
-  $last_name = $_POST['last_name'];
-  $email = $_POST['email'];
-  $gender = $_POST['gender'];
 
-  $sql = "UPDATE `crud` SET `first_name`='$first_name',`last_name`='$last_name',`email`='$email',`gender`='$gender' WHERE id = $id";
+  $id_film = $_POST['id_film'];
+  $id_salle = $_POST['id_salle'];
+
+  /*$horaire = $_POST['horaire'];
+  $durée = $_POST['durée'];
+  $horaire = date('d/m/Y H:i:s', ($_POST['horaire']));
+  $horaire = date('Y-m-d H:i:s', strtotime($_POST['horaire']));
+  /*$durée = $_POST['durée'];
+  $durée = $_POST['durée'];
+  $durée = sprintf('%02d:%02d:%02d', floor($durée / 3600), ($durée / 60) % 60, $durée % 60);*/
+
+  $horaire = $_POST['horaire'];
+  $horaire = date('Y-m-d H:i:s', strtotime($horaire));
+  $duree = $_POST['duree'];
+
+
+  $sql = "UPDATE `projection` SET `id_film`='$id_film',`id_salle`='$id_salle',`horaire`='$horaire',`duree`='$duree' WHERE id_projection = '$id_projection' ";
+ /* $sql = "ALTER TABLE `projection` CHANGE `horaire` `horaire` DATETIME NOT NULL;";*/
+
+  echo $sql;
 
   $result = mysqli_query($conn, $sql);
 
   if ($result) {
-    header("Location: index.php?msg=Data updated successfully");
+    header("Location: index-projection.php?msg=Data updated successfully");
   } else {
     echo "Failed: " . mysqli_error($conn);
   }
 }
-
 ?>
 
 
@@ -53,7 +70,7 @@ if (isset($_POST["submit"])) {
     </div>
 
     <?php
-    $sql = "SELECT * FROM `crud` WHERE id = $id LIMIT 1";
+    $sql = "SELECT * FROM `projection` WHERE id_projection = $id_projection LIMIT 1";
     $result = mysqli_query($conn, $sql);
     $row = mysqli_fetch_assoc($result);
     ?>
@@ -62,34 +79,29 @@ if (isset($_POST["submit"])) {
       <form action="" method="post" style="width:50vw; min-width:300px;">
         <div class="row mb-3">
           <div class="col">
-            <label class="form-label">First Name:</label>
-            <input type="text" class="form-control" name="first_name" value="<?php echo $row['first_name'] ?>">
+            <label class="form-label">ID Film:</label>
+            <input type="text" class="form-control" name="id_film" value="<?php echo $row['id_film'] ?>">
           </div>
 
           <div class="col">
-            <label class="form-label">Last Name:</label>
-            <input type="text" class="form-control" name="last_name" value="<?php echo $row['last_name'] ?>">
+            <label class="form-label">ID Salle:</label>
+            <input type="text" class="form-control" name="id_salle" value="<?php echo $row['id_salle'] ?>">
           </div>
         </div>
 
         <div class="mb-3">
-          <label class="form-label">Email:</label>
-          <input type="email" class="form-control" name="email" value="<?php echo $row['email'] ?>">
+          <label class="form-label">horaire:</label>
+          <input type="text" class="form-control" name="horaire" value="<?php echo $row['horaire'] ?>">
         </div>
 
         <div class="form-group mb-3">
-          <label>Gender:</label>
-          &nbsp;
-          <input type="radio" class="form-check-input" name="gender" id="male" value="male" <?php echo ($row["gender"] == 'male') ? "checked" : ""; ?>>
-          <label for="male" class="form-input-label">Male</label>
-          &nbsp;
-          <input type="radio" class="form-check-input" name="gender" id="female" value="female" <?php echo ($row["gender"] == 'female') ? "checked" : ""; ?>>
-          <label for="female" class="form-input-label">Female</label>
+        <label class="form-label">Durée:</label>
+          <input type="text" class="form-control" name="duree" value="<?php echo $row['duree'] ?>">
         </div>
 
         <div>
           <button type="submit" class="btn btn-success" name="submit">Update</button>
-          <a href="index.php" class="btn btn-danger">Cancel</a>
+          <a href="projections-table.php" class="btn btn-danger">Cancel</a>
         </div>
       </form>
     </div>
